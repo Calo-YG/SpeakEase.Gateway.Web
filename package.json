@@ -1,0 +1,69 @@
+{
+  "name": "speakease-gateway-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "build:test": "vite build --mode test",
+    "build:prod": "vite build --mode production",
+    "preview": "vite preview",
+    "eslint:comment": "使用 ESLint 检查并自动修复 src 目录下所有扩展名为 .js 和 .vue 的文件",
+    "eslint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
+    "prettier:comment": "自动格式化当前目录下的所有文件",
+    "prettier": "prettier --write",
+    "commit:comment": "引导设置规范化的提交信息",
+    "commit": "git-cz"
+  },
+  "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
+    "@types/chart.js": "^2.9.41",
+    "@types/xlsx": "^0.0.36",
+    "ant-design-vue": "4.x",
+    "axios": "^1.8.4",
+    "chart.js": "^4.4.9",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
+    "element-plus": "^2.9.7",
+    "pinia": "^3.0.2",
+    "vue": "^3.5.13",
+    "vue-chartjs": "^5.3.2",
+    "vue-router": "^4.5.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "@types/node": "^22.14.0",
+    "@types/nprogress": "^0.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "@vitejs/plugin-vue-jsx": "^4.1.2",
+    "@vue/tsconfig": "^0.7.0",
+    "commitizen": "^4.3.1",
+    "commitlint-config-cz": "^0.13.3",
+    "consola": "^3.4.2",
+    "cz-conventional-changelog": "^3.3.0",
+    "cz-customizable": "^7.4.0",
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "eslint-plugin-vue": "^10.0.0",
+    "less": "^4.3.0",
+    "nprogress": "^0.2.0",
+    "prettier": "^3.5.3",
+    "typescript": "~5.7.2",
+    "unplugin-vue-components": "^28.4.1",
+    "vite": "^6.2.0",
+    "vite-plugin-style-import": "^2.0.0",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
+    "vue-tsc": "^2.2.4"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    }
+  }
+}
