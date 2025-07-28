@@ -1,0 +1,257 @@
+:root {
+  /* 浅色主题变量 */
+  /* 主要颜色 */
+  --primary-color: #1677ff;
+  --primary-hover: #4096ff;
+  --primary-active: #0958d9;
+  --primary-bg: #e6f4ff;
+
+  /* 功能色 */
+  --success-color: #52c41a;
+  --success-bg: #f6ffed;
+  --warning-color: #faad14;
+  --warning-bg: #fffbe6;
+  --error-color: #ff4d4f;
+  --error-bg: #fff2f0;
+  --info-color: #1677ff;
+  --info-bg: #e6f4ff;
+
+  /* 中性色 */
+  --bg-color: #f5f5f5;
+  --component-bg: #ffffff;
+  --text-color: #1f2937;
+  --text-secondary: #6b7280;
+  --text-disabled: #9ca3af;
+  --border-color: #e5e7eb;
+  --border-color-rgb: 229, 231, 235;
+  --border-secondary: #f3f4f6;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-color-rgb: 0, 0, 0;
+  --header-bg: rgba(255, 255, 255, 0.9);
+
+  /* 特殊组件颜色 */
+  --menu-bg: #ffffff;
+  --menu-item-hover: #f3f4f6;
+  --menu-item-active: #e6f4ff;
+  --table-header-bg: #fafafa;
+  --table-row-hover: #fafafa;
+  --input-bg: #ffffff;
+  --input-placeholder: #9ca3af;
+  --modal-mask: rgba(0, 0, 0, 0.45);
+  --tooltip-bg: rgba(0, 0, 0, 0.75);
+}
+
+[data-theme='dark'] {
+  /* 深色主题变量 */
+  /* 主要颜色 */
+  --primary-color: #1890ff;
+  --primary-hover: #40a9ff;
+  --primary-active: #096dd9;
+  --primary-bg: #111b26;
+
+  /* 功能色 */
+  --success-color: #49aa19;
+  --success-bg: #162312;
+  --warning-color: #d89614;
+  --warning-bg: #2b2111;
+  --error-color: #dc2626;
+  --error-bg: #2a1215;
+  --info-color: #1890ff;
+  --info-bg: #111b26;
+
+  /* 中性色 */
+  --bg-color: #1f1f1f;
+  --component-bg: #141414;
+  --text-color: #e5e7eb;
+  --text-secondary: #9ca3af;
+  --text-disabled: #6b7280;
+  --border-color: #303030;
+  --border-color-rgb: 48, 48, 48;
+  --border-secondary: #262626;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --shadow-color-rgb: 0, 0, 0;
+  --header-bg: rgba(20, 20, 20, 0.9);
+
+  /* 特殊组件颜色 */
+  --menu-bg: #141414;
+  --menu-item-hover: #1f1f1f;
+  --menu-item-active: #111b26;
+  --table-header-bg: #1f1f1f;
+  --table-row-hover: #1f1f1f;
+  --input-bg: #141414;
+  --input-placeholder: #6b7280;
+  --modal-mask: rgba(0, 0, 0, 0.65);
+  --tooltip-bg: rgba(0, 0, 0, 0.85);
+}
+
+/* 全局过渡效果 */
+* {
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+/* 应用主题变量 */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* 组件主题样式 */
+.header-bar {
+  background: var(--header-bg);
+  border-color: var(--border-color);
+}
+
+.user-info,
+.menu-item,
+.modal-content,
+.dropdown-menu {
+  background: var(--component-bg);
+}
+
+.username,
+.current-page {
+  color: var(--text-color);
+}
+
+.menu-icon,
+.icon {
+  color: var(--text-secondary);
+}
+
+.divider {
+  background: var(--border-color);
+}
+
+/* 按钮和交互元素 */
+button {
+  background: var(--component-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+button:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  background: var(--primary-bg);
+}
+
+/* 输入框 */
+input,
+select,
+textarea {
+  background: var(--input-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+input::placeholder,
+select::placeholder,
+textarea::placeholder {
+  color: var(--input-placeholder);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--primary-color);
+  background: var(--input-bg);
+}
+
+/* 表格样式 */
+table {
+  background: var(--component-bg);
+  border-color: var(--border-color);
+}
+
+th {
+  background: var(--table-header-bg);
+  color: var(--text-color);
+}
+
+tr:hover {
+  background: var(--table-row-hover);
+}
+
+/* 卡片样式 */
+.card {
+  background: var(--component-bg);
+  border-color: var(--border-color);
+  box-shadow: 0 1px 3px var(--shadow-color);
+}
+
+/* 模态框样式 */
+.modal-mask {
+  background: var(--modal-mask);
+}
+
+/* 菜单样式 */
+.menu {
+  background: var(--menu-bg);
+}
+
+.menu-item:hover {
+  background: var(--menu-item-hover);
+}
+
+.menu-item.active {
+  background: var(--menu-item-active);
+  color: var(--primary-color);
+}
+
+/* 工具提示 */
+.tooltip {
+  background: var(--tooltip-bg);
+  color: #ffffff;
+}
+
+/* 标签 */
+.tag {
+  background: var(--component-bg);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.tag-primary {
+  background: var(--primary-bg);
+  color: var(--primary-color);
+}
+
+.tag-success {
+  background: var(--success-bg);
+  color: var(--success-color);
+}
+
+.tag-warning {
+  background: var(--warning-bg);
+  color: var(--warning-color);
+}
+
+.tag-error {
+  background: var(--error-bg);
+  color: var(--error-color);
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* 选中文本样式 */
+::selection {
+  background: var(--primary-color);
+  color: #ffffff;
+} 

@@ -22,5 +22,14 @@ export const routes: Array<RouteRecordRaw> = [
       title: "注册",
       requiresAuth: false,
     },
+  },
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    component: () => import("@/views/Dashboard/index.vue"),
+    meta: {
+      title: "仪表板",
+      requiresAuth: true,
+    },
   }
 ];
