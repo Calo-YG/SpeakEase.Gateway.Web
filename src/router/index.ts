@@ -21,6 +21,7 @@ router.beforeEach(async (to, from, next) => {
   const token = TokenStorage.getAccessToken();
   const userInfo = TokenStorage.getUserInfo();
 
+  console.log(token, userInfo);
   // 如果已登录
   if (token && userInfo) {
     if (to.name === "Login" || to.name === "Register") {
