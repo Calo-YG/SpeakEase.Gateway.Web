@@ -57,3 +57,11 @@ export async function getUserInfo(loginUserInfo?: UserState): Promise<UserState 
     return null
   }
 } 
+
+
+/**
+ * 退出登录
+ */
+export function logout() {
+  return request.post('/api/sysuser/logout')
+}

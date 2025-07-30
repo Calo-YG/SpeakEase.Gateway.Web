@@ -1,5 +1,5 @@
 import { TokenStorage } from './tokenStorage'
-import { getUserInfo } from '@/api/user'
+import { getUserInfo, logout } from '@/api/user'
 import { useUserStore } from '@/store/userStore'
 import type { UserState } from '@/store/user'
 import type { TokenDto } from '@/http/response'
@@ -94,8 +94,11 @@ export class UserManager {
   /**
    * 登出处理
    */
-  static logout(): void {
+  static async logout(): Promise<boolean> {
     try {
+      // 调用服务器端登出API
+      await logout()
+      
       // 清除本地存储
       TokenStorage.clear()
       
@@ -104,8 +107,18 @@ export class UserManager {
       userStore.clearUserInfo()
       
       console.log('用户已登出')
+      return true
     } catch (error) {
       console.error('登出处理失败:', error)
+      // 即使服务器端登出失败，也要清除本地状态
+      try {
+        TokenStorage.clear()
+        const userStore = useUserStore()
+        userStore.clearUserInfo()
+      } catch (localError) {
+        console.error('清除本地状态失败:', localError)
+      }
+      return false
     }
   }
 

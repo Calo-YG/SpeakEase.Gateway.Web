@@ -5,18 +5,20 @@ import './style.css'
 import './styles/theme.css'
 import App from './App.vue'
 import router from '@/router'
-
-// 初始化主题
-const initTheme = () => {
-  const savedTheme = localStorage.getItem('theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-};
+import { useThemeStore } from '@/store/themeStore'
 
 // 创建应用实例
 const app = createApp(App)
 
-// 初始化主题
-initTheme();
+// 使用插件
+const pinia = createPinia()
+app.use(router)
+app.use(pinia)
+
+// 初始化全局主题（在 Pinia 初始化之后）
+const themeStore = useThemeStore()
+themeStore.initTheme()
+themeStore.watchSystemTheme()
 
 // 错误处理
 app.config.errorHandler = (err, instance, info) => {
@@ -32,11 +34,6 @@ app.config.errorHandler = (err, instance, info) => {
 if (import.meta.env.DEV) {
   app.config.performance = true
 }
-
-// 使用插件
-const pinia = createPinia()
-app.use(router)
-app.use(pinia)
 
 // 挂载应用
 app.mount('#app')

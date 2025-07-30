@@ -7,7 +7,7 @@ import { notification } from 'ant-design-vue'
 
 export const useUserStore = defineStore('user', {
   state: (): UserState => ({
-    userId: 0,
+    id: null,
     userName: '',
     email: '',
     account: '',
@@ -50,7 +50,7 @@ export const useUserStore = defineStore('user', {
 
         // 更新本地存储
         TokenStorage.setUserInfo({
-          userId: payload.userId || 0,
+          id: payload.id || null,
           userName: payload.userName || '',
           email: payload.email || '',
           account: payload.account || '',
