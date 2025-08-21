@@ -3,7 +3,7 @@ import { RouteRecordRaw } from "vue-router";
 export const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    redirect: "/login", // 默认跳转到 login
+    redirect: "/dashboard", // 默认跳转到 dashboard
   },
   {
     path: "/login",
@@ -24,14 +24,14 @@ export const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/",
+    path: "/dashboard",
     component: () => import("@/layouts/MainLayout.vue"),
     meta: {
       requiresAuth: true,
     },
     children: [
       {
-        path: "dashboard",
+        path: "",
         name: "Dashboard",
         component: () => import("@/views/Dashboard/index.vue"),
         meta: {

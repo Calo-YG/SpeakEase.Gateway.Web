@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import Antd from 'ant-design-vue'
 import { notification } from 'ant-design-vue'
+import 'ant-design-vue/dist/reset.css'
 import './style.css'
 import './styles/theme.css'
 import App from './App.vue'
@@ -14,6 +16,7 @@ const app = createApp(App)
 const pinia = createPinia()
 app.use(router)
 app.use(pinia)
+app.use(Antd)
 
 // 初始化全局主题（在 Pinia 初始化之后）
 const themeStore = useThemeStore()

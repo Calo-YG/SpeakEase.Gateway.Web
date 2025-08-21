@@ -43,9 +43,9 @@
 
       <a-card class="stat-card" hoverable>
         <div class="stat-content">
-          <div class="stat-icon route-icon">
-            <RouteOutlined />
-          </div>
+                      <div class="stat-icon route-icon">
+              <ForkOutlined />
+            </div>
           <div class="stat-info">
             <div class="stat-number">{{ stats.routeCount }}</div>
             <div class="stat-label">路由总数</div>
@@ -112,7 +112,8 @@ import {
   LoginOutlined,
   UserAddOutlined,
   SettingOutlined,
-  BellOutlined
+  BellOutlined,
+  ForkOutlined
 } from '@ant-design/icons-vue'
 import { useUserStore } from '@/store/userStore'
 

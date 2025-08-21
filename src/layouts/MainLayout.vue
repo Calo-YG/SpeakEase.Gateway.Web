@@ -43,10 +43,10 @@
             </template>
             <template #title>用户管理</template>
             <a-menu-item key="user-list">
-              <router-link to="/user/list">用户列表</router-link>
+              <router-link to="/dashboard/user/list">用户列表</router-link>
             </a-menu-item>
             <a-menu-item key="user-profile">
-              <router-link to="/user/profile">个人资料</router-link>
+              <router-link to="/dashboard/user/profile">个人资料</router-link>
             </a-menu-item>
           </a-sub-menu>
 
@@ -56,10 +56,10 @@
             </template>
             <template #title>服务管理</template>
             <a-menu-item key="service-list">
-              <router-link to="/service/list">服务列表</router-link>
+              <router-link to="/dashboard/service/list">服务列表</router-link>
             </a-menu-item>
             <a-menu-item key="service-config">
-              <router-link to="/service/config">服务配置</router-link>
+              <router-link to="/dashboard/service/config">服务配置</router-link>
             </a-menu-item>
           </a-sub-menu>
 
@@ -69,10 +69,10 @@
             </template>
             <template #title>路由管理</template>
             <a-menu-item key="route-list">
-              <router-link to="/route/list">路由列表</router-link>
+              <router-link to="/dashboard/route/list">路由列表</router-link>
             </a-menu-item>
             <a-menu-item key="route-config">
-              <router-link to="/route/config">路由配置</router-link>
+              <router-link to="/dashboard/route/config">路由配置</router-link>
             </a-menu-item>
           </a-sub-menu>
 
@@ -82,10 +82,10 @@
             </template>
             <template #title>集群配置</template>
             <a-menu-item key="cluster-list">
-              <router-link to="/cluster/list">集群列表</router-link>
+              <router-link to="/dashboard/cluster/list">集群列表</router-link>
             </a-menu-item>
             <a-menu-item key="cluster-monitor">
-              <router-link to="/cluster/monitor">集群监控</router-link>
+              <router-link to="/dashboard/cluster/monitor">集群监控</router-link>
             </a-menu-item>
           </a-sub-menu>
 
@@ -95,10 +95,10 @@
             </template>
             <template #title>系统设置</template>
             <a-menu-item key="system-config">
-              <router-link to="/system/config">系统配置</router-link>
+              <router-link to="/dashboard/system/config">系统配置</router-link>
             </a-menu-item>
             <a-menu-item key="system-log">
-              <router-link to="/system/log">系统日志</router-link>
+              <router-link to="/dashboard/system/log">系统日志</router-link>
             </a-menu-item>
           </a-sub-menu>
         </a-menu>
