@@ -149,7 +149,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { UserOutlined, LockOutlined, MailOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { register, uploadAvatar } from '@/api/user'
+import { register, uploadAvatar } from '@/api/sysuser/user'
 
 const form = ref({
   account: '',

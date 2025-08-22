@@ -72,11 +72,16 @@ instance.interceptors.request.use(
 );
 
 // 刷新接口封装
+/**
+ * 刷新用户认证Token的异步函数
+ * @returns {Promise<string>} 返回新的refresh token字符串
+ * @throws {Error} 当刷新Token请求失败时抛出错误
+ */
 async function refreshToken(): Promise<string> {
   try {
-    const response = await instance.post<ApiResponse<RefreshTokenResponse>>('/api/auth/refresh', {
+    const response = await instance.post<ApiResponse<RefreshTokenResponse>>('/api/sysuser/refreshToken', {
       refreshToken: TokenStorage.getToken()?.refreshToken,
-      id: TokenStorage.getUserInfo()?.id,
+      userId: TokenStorage.getUserInfo()?.id,
     });
     return response.data.data.refreshToken;
   } catch (error) {

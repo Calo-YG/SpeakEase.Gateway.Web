@@ -1,5 +1,5 @@
 import { TokenStorage } from './tokenStorage'
-import { getUserInfo, logout } from '@/api/user'
+import { getUserInfo, logout } from '@/api/sysuser/user'
 import { useUserStore } from '@/store/userStore'
 import type { UserState } from '@/store/user'
 import type { TokenDto } from '@/http/response'
@@ -134,7 +134,7 @@ export class UserManager {
    * 获取用户基本信息（不包含敏感信息）
    * @returns 用户基本信息
    */
-  static getBasicUserInfo(): { userId: number | null; userName: string; account: string } | null {
+  static getBasicUserInfo(): { userId: string | null; userName: string; account: string } | null {
     const userInfo = TokenStorage.getUserInfo()
     if (!userInfo) return null
     

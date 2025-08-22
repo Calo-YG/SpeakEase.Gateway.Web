@@ -238,6 +238,8 @@ import {
   DeleteOutlined,
   UserOutlined
 } from '@ant-design/icons-vue'
+import { UserPageDto, UserPageInput } from '@/api/sysuser/sysuser'
+import { getUserList } from '@/api/sysuser/user'
 
 // 搜索表单
 const searchForm = reactive({
@@ -265,8 +267,8 @@ const columns = [
   },
   {
     title: '用户名',
-    dataIndex: 'userName',
-    key: 'userName'
+    dataIndex: 'name',
+    key: 'name'
   },
   {
     title: '账号',
@@ -279,14 +281,9 @@ const columns = [
     key: 'email'
   },
   {
-    title: '状态',
-    key: 'status',
-    width: 100
-  },
-  {
     title: '创建时间',
-    dataIndex: 'createTime',
-    key: 'createTime',
+    dataIndex: 'createAt',
+    key: 'createAt',
     width: 180
   },
   {
@@ -316,35 +313,7 @@ const pagination = reactive({
 })
 
 // 模拟用户数据
-const userList = ref([
-  {
-    userId: 1,
-    userName: '张三',
-    account: 'zhangsan',
-    email: 'zhangsan@example.com',
-    avatar: '',
-    status: 'active',
-    createTime: '2024-01-15 10:30:00'
-  },
-  {
-    userId: 2,
-    userName: '李四',
-    account: 'lisi',
-    email: 'lisi@example.com',
-    avatar: '',
-    status: 'active',
-    createTime: '2024-01-16 14:20:00'
-  },
-  {
-    userId: 3,
-    userName: '王五',
-    account: 'wangwu',
-    email: 'wangwu@example.com',
-    avatar: '',
-    status: 'inactive',
-    createTime: '2024-01-17 09:15:00'
-  }
-])
+const userList = ref<Array<UserPageDto>>([])
 
 // 表单验证规则
 const rules = {
@@ -463,23 +432,25 @@ const handleAvatarChange = (info: any) => {
 // 获取用户列表
 const fetchUserList = async () => {
   loading.value = true
-  try {
-    // 这里调用获取用户列表API
-    // const response = await getUserList({
-    //   page: pagination.current,
-    //   pageSize: pagination.pageSize,
-    //   ...searchForm
-    // })
-    // userList.value = response.data.list
-    // pagination.total = response.data.total
-    
-    // 模拟延迟
-    await new Promise(resolve => setTimeout(resolve, 1000))
-  } catch (error) {
-    message.error('获取用户列表失败')
-  } finally {
-    loading.value = false
+
+  let params:UserPageInput = {
+    userName: searchForm.userName,
+    account: searchForm.account,
+    email: searchForm.email,
+    pagination: {
+      page: pagination.current,
+      pageSize: pagination.pageSize,
+      order: 'createAt',
+      orderBy: 'desc'
+    }
   }
+
+  getUserList(params).then((res) => {
+    console.log("列表响应",res)
+    userList.value = res.data
+    pagination.total = res.total
+    loading.value = false
+  })
 }
 
 // 组件挂载时获取数据

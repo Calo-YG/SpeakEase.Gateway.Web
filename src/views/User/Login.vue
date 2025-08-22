@@ -85,7 +85,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
-import { login } from '@/api/user'
+import { login } from '@/api/sysuser/user'
 import { UserManager } from '@/utils/userManager'
 
 const form = ref({
