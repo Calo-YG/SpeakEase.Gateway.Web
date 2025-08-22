@@ -45,9 +45,9 @@
             <a-menu-item key="user-list">
               <router-link to="/dashboard/user/list">用户列表</router-link>
             </a-menu-item>
-            <a-menu-item key="user-profile">
+            <!-- <a-menu-item key="user-profile">
               <router-link to="/dashboard/user/profile">个人资料</router-link>
-            </a-menu-item>
+            </a-menu-item> -->
           </a-sub-menu>
 
           <a-sub-menu key="service">
@@ -58,9 +58,9 @@
             <a-menu-item key="service-list">
               <router-link to="/dashboard/service/list">服务列表</router-link>
             </a-menu-item>
-            <a-menu-item key="service-config">
-              <router-link to="/dashboard/service/config">服务配置</router-link>
-            </a-menu-item>
+            <!-- <a-menu-item key="service-config">
+              <router-link to="/dashboard/service/config">服务列表</router-link>
+            </a-menu-item> -->
           </a-sub-menu>
 
           <a-sub-menu key="route">
@@ -71,9 +71,9 @@
             <a-menu-item key="route-list">
               <router-link to="/dashboard/route/list">路由列表</router-link>
             </a-menu-item>
-            <a-menu-item key="route-config">
-              <router-link to="/dashboard/route/config">路由配置</router-link>
-            </a-menu-item>
+            <!-- <a-menu-item key="route-config">
+              <router-link to="/dashboard/route/config">路由列表</router-link>
+            </a-menu-item> -->
           </a-sub-menu>
 
           <a-sub-menu key="cluster">

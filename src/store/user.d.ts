@@ -4,7 +4,7 @@
  */
 export interface UserState {
     /** 用户ID，可能为 null */
-    id: number | null;
+    id: string | null;
     
     /** 用户名 */
     userName: string;
