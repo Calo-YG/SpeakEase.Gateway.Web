@@ -6,7 +6,7 @@ export interface ApiResponse<P = any> {
     /** 状态码 */
     code: number;
     /** 是否成功 */
-    successed: boolean;
+    succeeded: boolean;
     /** 响应消息 */
     message: string;
     /** 响应数据 */

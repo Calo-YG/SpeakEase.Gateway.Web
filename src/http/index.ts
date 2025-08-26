@@ -1,9 +1,8 @@
-// axiosClient.js
-import axios from 'axios';
+// axiosClient.ts
+import axios, { type AxiosRequestConfig, type AxiosResponse, type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import router from '@/router/index';
 import { TokenStorage } from '@/utils/tokenStorage';
 import { message, notification } from 'ant-design-vue';
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import type { ApiResponse } from '@/http/response';
 
 // 定义接口和类型
@@ -20,6 +19,24 @@ interface AxiosConfig extends AxiosRequestConfig {
   baseURL: string;
   timeout: number;
   headers?: Record<string, string>;
+}
+
+// 请求配置接口
+interface RequestConfig extends AxiosRequestConfig {
+  _retry?: boolean;
+  _retryCount?: number;
+  _cancelToken?: any;
+  metadata?: { startTime: Date };
+}
+
+// 错误类型枚举
+enum ErrorType {
+  NETWORK = 'NETWORK',
+  TIMEOUT = 'TIMEOUT',
+  SERVER = 'SERVER',
+  CLIENT = 'CLIENT',
+  AUTH = 'AUTH',
+  UNKNOWN = 'UNKNOWN'
 }
 
 // 创建 Axios 实例
@@ -56,16 +73,34 @@ const processQueue = (error: unknown, token: string | null = null): void => {
   failedQueue = [];
 };
 
+// 获取错误类型
+const getErrorType = (error: AxiosError): ErrorType => {
+  if (!error.response) {
+    if (error.code === 'ECONNABORTED') {
+      return ErrorType.TIMEOUT;
+    }
+    return ErrorType.NETWORK;
+  }
+  
+  const status = error.response.status;
+  if (status >= 500) return ErrorType.SERVER;
+  if (status >= 400) return ErrorType.CLIENT;
+  if (status === 401) return ErrorType.AUTH;
+  
+  return ErrorType.UNKNOWN;
+};
+
 // 请求拦截：注入 Access Token
 instance.interceptors.request.use(
-  (config) => {
+  (config: InternalAxiosRequestConfig) => {
     const token = TokenStorage.getAccessToken();
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
     return config;
   },
-  (error) => {
+  (error: AxiosError) => {
     console.error('请求拦截器错误:', error);
     return Promise.reject(error);
   }
@@ -74,15 +109,27 @@ instance.interceptors.request.use(
 // 刷新接口封装
 /**
  * 刷新用户认证Token的异步函数
- * @returns {Promise<string>} 返回新的refresh token字符串
+ * @returns {Promise<string>} 返回新的access token字符串
  * @throws {Error} 当刷新Token请求失败时抛出错误
  */
 async function refreshToken(): Promise<string> {
   try {
+    const refreshTokenValue = TokenStorage.getRefreshToken();
+    const userInfo = TokenStorage.getUserInfo();
+    
+    if (!refreshTokenValue || !userInfo?.id) {
+      throw new Error('缺少刷新token或用户信息');
+    }
+    
     const response = await instance.post<ApiResponse<RefreshTokenResponse>>('/api/sysuser/refreshToken', {
-      refreshToken: TokenStorage.getToken()?.refreshToken,
-      userId: TokenStorage.getUserInfo()?.id,
+      refreshToken: refreshTokenValue,
+      userId: userInfo.id,
     });
+    
+    if (!response.data.succeeded) {
+      throw new Error(response.data.message || '刷新token失败');
+    }
+    
     return response.data.data.refreshToken;
   } catch (error) {
     console.error('刷新Token失败:', error);
@@ -96,7 +143,7 @@ instance.interceptors.response.use(
     const res = response.data;
     
     // 如果响应成功，直接返回 response
-    if (res.successed) {
+    if (res.succeeded) {
       return response;
     }
     
@@ -109,20 +156,26 @@ instance.interceptors.response.use(
     
     return Promise.reject(new Error(res.message || '请求失败'));
   },
-  async (error) => {
-    const originalRequest = error.config;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as RequestConfig;
     const status = error?.response?.status;
+    const errorType = getErrorType(error);
 
     // 401: Access Token 失效，尝试刷新
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       if (isRefreshing) {
-        return new Promise((resolve, reject) => {
-          failedQueue.push({ resolve, reject });
+        return new Promise<string>((resolve, reject) => {
+          failedQueue.push({ 
+            resolve: (value?: string | PromiseLike<string>) => resolve(value || ''), 
+            reject 
+          });
         })
           .then((token) => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+            }
             return instance(originalRequest);
           })
           .catch((err) => {
@@ -133,8 +186,16 @@ instance.interceptors.response.use(
       isRefreshing = true;
       try {
         const newToken = await refreshToken();
-        TokenStorage.setToken({ token: newToken, refreshToken: newToken });
-        instance.defaults.headers.Authorization = `Bearer ${newToken}`;
+        // 正确存储token结构
+        TokenStorage.setToken({ 
+          token: newToken, 
+          refreshToken: TokenStorage.getRefreshToken() || newToken 
+        });
+        
+        if (instance.defaults.headers.common) {
+          instance.defaults.headers.common.Authorization = `Bearer ${newToken}`;
+        }
+        
         processQueue(null, newToken);
         return instance(originalRequest);
       } catch (err) {
@@ -149,29 +210,41 @@ instance.interceptors.response.use(
     }
 
     // 统一错误处理
-    handleErrorStatus(status, error?.response?.data?.message);
+    handleError(errorType, status, error);
     return Promise.reject(error);
   }
 );
 
 // 统一错误处理函数
-const handleErrorStatus = (status: number | undefined, error: any): void => {
-  const errorMessages: Record<number, { message: string; description: string }> = {
-    400: { message: '请求参数错误', description: '请检查提交的数据是否正确' },
-    401: { message: '未授权', description: '请先登录' },
-    403: { message: '无权限', description: '你没有访问该资源的权限' },
-    404: { message: '资源未找到', description: '请求的接口不存在' },
-    500: { message: '服务器错误', description: '请稍后再试' },
-    502: { message: '网关错误', description: '服务器暂时不可用' },
-    503: { message: '服务不可用', description: '服务器维护中' },
-    504: { message: '网关超时', description: '请求超时，请重试' },
-    499: { message: '友好提示', description: error || '未知错误' },
+const handleError = (errorType: ErrorType, status?: number, error?: AxiosError): void => {
+  const errorMessages: Record<ErrorType, { message: string; description: string }> = {
+    [ErrorType.NETWORK]: { 
+      message: '网络连接失败', 
+      description: '请检查网络连接后重试' 
+    },
+    [ErrorType.TIMEOUT]: { 
+      message: '请求超时', 
+      description: '服务器响应超时，请稍后重试' 
+    },
+    [ErrorType.SERVER]: { 
+      message: '服务器错误', 
+      description: '服务器内部错误，请稍后重试' 
+    },
+    [ErrorType.CLIENT]: { 
+      message: '请求错误', 
+      description: getClientErrorMessage(status) 
+    },
+    [ErrorType.AUTH]: { 
+      message: '认证失败', 
+      description: '请重新登录' 
+    },
+    [ErrorType.UNKNOWN]: { 
+      message: '未知错误', 
+      description: error?.message || '发生未知错误' 
+    }
   };
 
-  const errorConfig = errorMessages[status as keyof typeof errorMessages] || {
-    message: '请求异常',
-    description: error?.response?.data?.message || error?.message || '未知错误',
-  };
+  const errorConfig = errorMessages[errorType];
 
   notification.error({
     ...errorConfig,
@@ -179,4 +252,62 @@ const handleErrorStatus = (status: number | undefined, error: any): void => {
   });
 };
 
+// 获取客户端错误信息
+const getClientErrorMessage = (status?: number): string => {
+  const statusMessages: Record<number, string> = {
+    400: '请求参数错误，请检查提交的数据',
+    403: '无权限访问该资源',
+    404: '请求的资源不存在',
+    405: '请求方法不被允许',
+    409: '资源冲突',
+    422: '请求数据验证失败',
+    429: '请求过于频繁，请稍后重试',
+    499: '请求被客户端取消'
+  };
+  
+  return statusMessages[status || 0] || '客户端请求错误';
+};
+
+// 创建请求取消令牌
+export const createCancelToken = () => {
+  return axios.CancelToken.source();
+};
+
+// 请求重试函数
+export const retryRequest = async <T>(
+  requestFn: () => Promise<T>,
+  maxRetries: number = 3,
+  delay: number = 1000
+): Promise<T> => {
+  let lastError: Error;
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await requestFn();
+    } catch (error) {
+      lastError = error as Error;
+      
+      // 如果是认证错误或客户端错误，不重试
+      if (error instanceof axios.AxiosError) {
+        const status = error.response?.status;
+        if (status && (status >= 400 && status < 500 && status !== 408)) {
+          throw error;
+        }
+      }
+      
+      // 最后一次重试失败，抛出错误
+      if (i === maxRetries - 1) {
+        throw lastError;
+      }
+      
+      // 等待后重试
+      await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+    }
+  }
+  
+  throw lastError!;
+};
+
+// 导出实例和工具函数
 export default instance;
+export { ErrorType };

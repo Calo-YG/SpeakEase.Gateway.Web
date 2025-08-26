@@ -97,38 +97,33 @@ const router = useRouter()
 
 const onLogin = async () => {
   loading.value = true
-  try {
-    const res = await login(form.value)
-    
+  login(form.value).then( async res => {
     // 调试信息
     console.log('登录响应数据:', res)
-    
+
     // 使用 UserManager 处理登录成功
     const tokenData = {
       token: res.token,
       refreshToken: res.refreshToken
     }
-    
+
     console.log('Token 数据:', tokenData)
-    
+
     // 后端没有返回用户信息，需要单独获取
     const userInfo = await UserManager.handleLoginSuccess(tokenData)
-    
+
     if (userInfo) {
       message.success('登录成功')
-      
+
       // 获取重定向地址或默认跳转到仪表板
       const redirect = router.currentRoute.value.query.redirect as string
       router.push(redirect || '/dashboard')
     } else {
       message.error('获取用户信息失败')
     }
-  } catch (error) {
-    console.error('登录失败:', error)
-    message.error('登录失败，请检查账号密码')
-  } finally {
+  }).finally(() => {
     loading.value = false
-  }
+  })
 }
 </script>
 
