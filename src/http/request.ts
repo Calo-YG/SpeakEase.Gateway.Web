@@ -33,6 +33,20 @@ const post = <T = any>(url: string, data?: any): Promise<T> => {
   })
 }
 
+/// DELETE 封装
+const del = <T = any>(url: string, data?: any): Promise<T> => {
+  return request<ApiResponse<T>>({
+    url,
+    method: 'delete',
+    data,
+  }).then(response => {
+    // 如果响应拦截器返回的是完整的响应对象，需要提取 data 字段
+    const responseData = (response as any).data || response
+    return responseData.data || responseData
+  })
+}
+
+
 /**
  * 文件上传封装
  * @param uploadUrl 上传接口地址
@@ -65,5 +79,6 @@ export default {
   request,
   get,
   post,
-  uploadFile
+  uploadFile,
+  del
 }

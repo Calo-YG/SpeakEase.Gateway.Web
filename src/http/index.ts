@@ -126,7 +126,7 @@ async function refreshToken(): Promise<string> {
       userId: userInfo.id,
     });
     
-    if (!response.data.succeeded) {
+    if (!response.data.successed) {
       throw new Error(response.data.message || '刷新token失败');
     }
     
@@ -143,7 +143,7 @@ instance.interceptors.response.use(
     const res = response.data;
     
     // 如果响应成功，直接返回 response
-    if (res.succeeded) {
+    if (res.successed) {
       return response;
     }
     
@@ -262,7 +262,7 @@ const getClientErrorMessage = (status?: number): string => {
     409: '资源冲突',
     422: '请求数据验证失败',
     429: '请求过于频繁，请稍后重试',
-    499: '请求被客户端取消'
+    499: '友好提示'
   };
   
   return statusMessages[status || 0] || '客户端请求错误';

@@ -17,7 +17,15 @@ export function login(data: { account: string; password: string }) {
  * @param data 注册参数
  */
 export function register(data: { account: string; password: string; name: string; email: string; avatar: string }) {
-  return request.post('/api/user/register', data)
+  return request.post('/api/sysuser/register', data)
+}
+
+/**
+ * 创建用户
+ * @param data 创建用户参数
+ */
+export function  createUser(data: { account: string; password: string; name: string; email: string; avatar: string }) {
+  return request.post('/api/sysuser/create', data)
 }
 
 /**
@@ -83,4 +91,12 @@ export function getUserList(data:UserPageInput) {
   // 请求路径为'/api/sysuser/getUserList'
   // 返回类型为ApiResponse<UserPageDto>
   return request.post<PageResult<UserPageDto>>('/api/sysuser/getList',data)
+}
+/**
+ * 删除用户
+ * @param id 用户ID
+ * @returns 删除结果
+ */
+export function deleteUser(id: string) {
+  return request.del(`/api/sysuser/delete/${id}`)
 }
