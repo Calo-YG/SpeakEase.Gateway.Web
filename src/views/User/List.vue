@@ -134,8 +134,8 @@
       >
         <a-row :gutter="16">
           <a-col :span="12">
-            <a-form-item label="用户名" name="userName">
-              <a-input v-model:value="userForm.userName" placeholder="请输入用户名" />
+            <a-form-item label="用户名" name="name">
+              <a-input v-model:value="userForm.name" placeholder="请输入用户名" />
             </a-form-item>
           </a-col>
           <a-col :span="12">
@@ -200,7 +200,7 @@
         </div>
         <div class="detail-item">
           <div class="detail-label">用户名：</div>
-          <div class="detail-value">{{ selectedUser.userName }}</div>
+          <div class="detail-value">{{ selectedUser.name }}</div>
         </div>
         <div class="detail-item">
           <div class="detail-label">账号：</div>
@@ -210,17 +210,17 @@
           <div class="detail-label">邮箱：</div>
           <div class="detail-value">{{ selectedUser.email }}</div>
         </div>
-        <div class="detail-item">
+        <!-- <div class="detail-item">
           <div class="detail-label">状态：</div>
           <div class="detail-value">
             <a-tag :color="selectedUser.status === 'active' ? 'green' : 'red'">
               {{ selectedUser.status === 'active' ? '正常' : '禁用' }}
             </a-tag>
           </div>
-        </div>
+        </div> -->
         <div class="detail-item">
           <div class="detail-label">创建时间：</div>
-          <div class="detail-value">{{ selectedUser.createTime }}</div>
+          <div class="detail-value">{{ selectedUser.createAt }}</div>
         </div>
       </div>
     </a-modal>
@@ -252,7 +252,7 @@ const searchForm = reactive({
 
 // 用户表单
 const userForm = reactive({
-  userName: '',
+  name: '',
   account: '',
   email: '',
   password: '',
@@ -298,8 +298,8 @@ const columns = [
 const loading = ref(false)
 const showAddModal = ref(false)
 const showDetailModal = ref(false)
-const editingUser = ref<any>(null)
-const selectedUser = ref<any>(null)
+const editingUser = ref<UserPageDto|null>(null)
+const selectedUser = ref<UserPageDto|null>(null)
 const fileList = ref([])
 const formRef = ref()
 
@@ -318,7 +318,7 @@ const userList = ref<Array<UserPageDto>>([])
 
 // 表单验证规则
 const rules = {
-  userName: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   account: [{ required: true, message: '请输入账号', trigger: 'blur' }],
   email: [
     { required: true, message: '请输入邮箱', trigger: 'blur' },
@@ -353,14 +353,16 @@ const handleTableChange = (pag: any) => {
 
 // 编辑用户
 const handleEdit = (record: any) => {
+  console.log("编辑用户",record)
   editingUser.value = record
   Object.assign(userForm, {
-    userName: record.userName,
+    name: record.name,
     account: record.account,
     email: record.email,
     avatar: record.avatar,
     password: ''
   })
+
   showAddModal.value = true
 }
 
@@ -386,7 +388,7 @@ const handleSave = async () => {
     // 这里调用保存API
     const  submitData = {
       id: editingUser.value ? editingUser.value.id : undefined,
-      name: userForm.userName,
+      name: userForm.name,
       account: userForm.account,
       email: userForm.email,
       password: userForm.password,

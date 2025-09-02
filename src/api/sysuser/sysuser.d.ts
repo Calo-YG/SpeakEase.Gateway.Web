@@ -16,6 +16,9 @@ export interface UserPageDto {
   
     /** 用户头像 */
     email: string;
+
+    /** 用户头像 */
+    avatar: string;
   
     /** 创建时间 */
     createAt: string; // 用 string 表示 ISO 日期
