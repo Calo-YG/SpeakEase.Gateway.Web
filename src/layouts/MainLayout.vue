@@ -138,7 +138,7 @@
                   </template>
                 </a-avatar>
                 <div class="user-details" v-show="!sidebarCollapsed">
-                  <span class="username">{{ userInfo.userName }}</span>
+                  <span class="username">{{ userInfo.name }}</span>
                   <span class="user-role">管理员</span>
                 </div>
                 <DownOutlined class="dropdown-icon" />
@@ -152,7 +152,7 @@
                       </template>
                     </a-avatar>
                     <div class="header-info">
-                      <div class="header-name">{{ userInfo.userName }}</div>
+                      <div class="header-name">{{ userInfo.name }}</div>
                       <div class="header-email">{{ userInfo.email || 'user@example.com' }}</div>
                     </div>
                   </div>

@@ -134,14 +134,15 @@ export class UserManager {
    * 获取用户基本信息（不包含敏感信息）
    * @returns 用户基本信息
    */
-  static getBasicUserInfo(): { userId: string | null; userName: string; account: string } | null {
+  static getBasicUserInfo(): { userId: string | null; userName: string; account: string;avatar: string } | null {
     const userInfo = TokenStorage.getUserInfo()
     if (!userInfo) return null
     
     return {
       userId: userInfo.id,
-      userName: userInfo.userName,
-      account: userInfo.account
+      userName: userInfo.name,
+      account: userInfo.account,
+      avatar: userInfo.avatar
     }
   }
 } 

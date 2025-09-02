@@ -7,7 +7,7 @@ export interface UserState {
     id: string | null;
     
     /** 用户名 */
-    userName: string;
+    name: string;
     
     /** 用户邮箱 */
     email: string;
