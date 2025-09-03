@@ -3,7 +3,7 @@
     <!-- 欢迎区域 -->
     <div class="welcome-section">
       <div class="welcome-content">
-        <h1 class="welcome-title">欢迎回来，{{ userInfo.userName }}！</h1>
+        <h1 class="welcome-title">欢迎回来，{{ userInfo.name }}！</h1>
         <p class="welcome-subtitle">今天是 {{ currentDate }}，祝您工作愉快！</p>
       </div>
       <div class="welcome-avatar">
